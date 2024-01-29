@@ -21,6 +21,24 @@ const options = {
   const submit = document.getElementById("submit");
   const cityInput = document.getElementById("city"); // Assuming you have an input field with id "city"
   
+let getUnixToNormalTime = (response_time) =>{
+let timestamp = response_time;
+let date = new Date(timestamp * 1000); // Convert seconds to milliseconds
+// Extract the components of the date
+let hours = date.getHours();
+let minutes = date.getMinutes();
+
+// Determine AM/PM and adjust hours
+let period = hours >= 12 ? 'PM' : 'AM';
+hours = hours % 12 || 12; // Convert to 12-hour format, 0 becomes 12
+
+// Format the time
+let formattedTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes} ${period}`;
+
+return formattedTime;
+
+  }
+
   const getWeather = (city) => {
       currentCity.innerHTML = city;
       fetch(`https://weather-by-api-ninjas.p.rapidapi.com/v1/weather?city=${city}`, options)
@@ -32,8 +50,8 @@ const options = {
           humidity.innerHTML = response.humidity;
           max_temp.innerHTML = response.max_temp;
           min_temp.innerHTML = response.min_temp;
-          sunrise.innerHTML = response.sunrise;
-          sunset.innerHTML = response.sunset;
+          sunrise.innerHTML = getUnixToNormalTime(response.sunrise);
+          sunset.innerHTML = getUnixToNormalTime(response.sunset);
           temp.innerHTML = response.temp;
           wind_degrees.innerHTML = response.wind_degrees;
           wind_degrees.style.display="none"
